@@ -2,105 +2,34 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador Soja Sustentável - Agrinho 2026</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; background: #e8f5e9; }
-        canvas { border: 4px solid #4caf50; background: #795548; cursor: pointer; }
-        .painel { margin: 10px; padding: 15px; background: white; display: inline-block; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #2e7d32; color: white; border: none; border-radius: 5px; margin: 5px; }
-        button:hover { background: #1b5e20; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Simulador Soja Sustentável 🚜🌱</h1>
-    <p>Tema: Agro Forte, Futuro Sustentável: Equilíbrio entre Produção e Meio Ambiente</p>
-    
-    <div class="painel">
-        <p>Moedas: <span id="money">100</span> | Água: <span id="water">100%</span> | Produção: <span id="score">0</span> sacas</p>
-        <button onclick="comprarTrator()">🚜 Comprar Trator ($50)</button>
-        <button onclick="irrigar()">💧 Irrigar Solo ($10)</button>
-    </div>
-    <br>
-    <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <header class="topo">
+        <h1>Simulador Soja Sustentável</h1>
+        <p>Agro Forte, Futuro Sustentável: equilibre produção, água e clima.</p>
+    </header>
 
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        let money = 100;
-        let water = 100;
-        let score = 0;
-        let temTrator = false;
-        let sojaCrescimento = 0; // 0 a 100
+    <section class="painel">
+        <div class="status-container">
+            <div class="status-item">Dinheiro: <strong>R$ <span id="money">100</span></strong></div>
+            <div class="status-item">Água do Solo: <strong><span id="water">100</span>%</strong></div>
+            <div class="status-item">Produção: <strong><span id="score">0</span> sacas</strong></div>
+            <div class="status-item">Clima: <strong><span id="weather">Ensolarado</span></strong></div>
+        </div>
+        <div class="controles">
+            <button id="plantarBtn">🌱 Plantar Sementes</button>
+            <button id="irrigarBtn">💧 Irrigar Solo (R$ 10)</button>
+            <button id="colhedeiraBtn">🚜 Comprar Colhedeira (R$ 50)</button>
+        </div>
+        <div class="info-text">
+            Use as setas para dirigir a colhedeira e passe por cima das plantas prontas para colher automaticamente.
+        </div>
+    </section>
 
-        function atualizarInterface() {
-            document.getElementById('money').innerText = money;
-            document.getElementById('water').innerText = water + "%";
-            document.getElementById('score').innerText = score;
-        }
-
-        function comprarTrator() {
-            if (money >= 50 && !temTrator) {
-                money -= 50;
-                temTrator = true;
-                atualizarInterface();
-                alert("Trator comprado! Produção agora é mais rápida.");
-            }
-        }
-
-        function irrigar() {
-            if (money >= 10) {
-                money -= 10;
-                water = 100;
-                atualizarInterface();
-            }
-        }
-
-        function desenhar() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Solo
-            ctx.fillStyle = water > 20 ? "#5d4037" : "#a1887f"; // Muda cor se secar
-            ctx.fillRect(50, 150, 500, 200);
-
-            // Planta de Soja crescendo
-            if (sojaCrescimento > 0) {
-                ctx.fillStyle = "#4caf50";
-                let altura = (sojaCrescimento / 100) * 80;
-                ctx.fillRect(280, 350 - altura, 40, altura);
-            }
-
-            // Trator (se possuir)
-            if (temTrator) {
-                ctx.fillStyle = "#f44336";
-                ctx.fillRect(50, 100, 80, 50);
-                ctx.fillStyle = "black";
-                ctx.fillText("TRATOR ATIVO", 55, 130);
-            }
-
-            requestAnimationFrame(desenhar);
-        }
-
-        // Lógica do Ciclo de Vida
-        setInterval(() => {
-            if (water > 0) {
-                let ganho = temTrator ? 5 : 2;
-                sojaCrescimento += ganho;
-                water -= 2; // Gasta água conforme cresce
-            }
-
-            if (sojaCrescimento >= 100) {
-                score += 10;
-                money += 30; // Venda da colheita
-                sojaCrescimento = 0;
-                alert("Colheita realizada! +10 sacas.");
-            }
-            
-            if (water <= 0) water = 0;
-            atualizarInterface();
-        }, 1000);
-
-        desenhar();
-    </script>
+    <canvas id="gameCanvas" width="700" height="420" aria-label="Simulador de plantio de soja"></canvas>
+    <script src="script.js"></script>
 </body>
 </html>
